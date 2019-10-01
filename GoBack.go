@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 )
@@ -13,8 +14,8 @@ import (
 type Article struct {
 	Id          string `json:"Id"`
 	Title       string `json:"Title"`
-	Description string `json:"description"`
-	Content     string `json:"content"`
+	Description string `json:"Description"`
+	Content     string `json:"Content"`
 }
 
 var Articles []Article
@@ -28,13 +29,14 @@ func main() {
 }
 
 func handleRequests() {
-	myRouter := mux.NewRouter().StrictSlash(true)
-	myRouter.HandleFunc("/", http.HandlerFunc(indexHandler))
-	myRouter.HandleFunc("/all", http.HandlerFunc(returnAllArticles))
-	myRouter.HandleFunc("/article", createNewArticle).Methods("POST")
-	myRouter.HandleFunc("/article/{id}", deleteArticle).Methods("DELETE")
-	myRouter.HandleFunc("/article/{id}", returnSingleArticle)
-	log.Fatal(http.ListenAndServe(":8080", myRouter))
+	router := mux.NewRouter().StrictSlash(true)
+	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
+	router.HandleFunc("/", http.HandlerFunc(indexHandler))
+	router.HandleFunc("/all", http.HandlerFunc(returnAllArticles))
+	router.HandleFunc("/article", createNewArticle).Methods("POST")
+	router.HandleFunc("/article/{id}", deleteArticle).Methods("DELETE")
+	router.HandleFunc("/article/{id}", returnSingleArticle)
+	log.Fatal(http.ListenAndServe(":8080", router))
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
@@ -46,7 +48,6 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func returnAllArticles(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Endpoint Hit: returnAllArticles")
 	json.NewEncoder(w).Encode(Articles)
 }
 
@@ -65,6 +66,8 @@ func createNewArticle(w http.ResponseWriter, r *http.Request) {
 	reqBody, _ := ioutil.ReadAll(r.Body) //unhandled exception
 	var article Article
 	json.Unmarshal(reqBody, &article)
+
+	article.Id = strconv.Itoa(len(Articles) + 1)
 	Articles = append(Articles, article)
 
 	json.NewEncoder(w).Encode(article)

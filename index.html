@@ -3,13 +3,22 @@
     <head>
         <meta charset="utf-8"/>
         <title>TRDSubmitz</title>
-        <script src="scripts.js"></script>
+        <script src="/static/scripts.js"></script>
     </head>
-    <body>
-        <form action="javascript:">
-            Give input pls: <input type="text" name="in"><br>
-            <input type="submit" value="Submit">
+    <body onload="getArticles()">
+        <h1>Lag en artikkel:</h1>
+        <form id="artikkelform"  onsubmit="submitArticle()">
+            Artikkelnavn:           <input type="text" id="Title" required>       <br>
+            Artikkelbeskrivelse:    <input type="text" id="Description" required> <br>
+            Artikkeltækst:          <input type="text" id="Content" required>     <br>
+            <input type="submit" value="Send inn">
         </form>
-
+        
+        <h1>Artikler:</h1>
+        <table id="artikler"> 
+            
+        </table>
+        
+        
     </body>
 </html>
