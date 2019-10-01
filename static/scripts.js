@@ -16,14 +16,6 @@ function submitArticle(){
   .catch((error) => console.log(error))
 }
 
-function getFormData() {
-  var formData = '{ \"Id\": \"\", \"Title\": \"' + document.getElementById("Title").value 
-  +'\", \"Description\": \"' + document.getElementById("Description").value
-  +'\", \"Content\": \"' + document.getElementById("Content").value +' \"}'
-  console.log(formData);
-  return formData;
-}
-
 function getArticles(){
   fetch('all', {
     method: 'GET',
