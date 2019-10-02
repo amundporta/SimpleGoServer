@@ -7,9 +7,7 @@ function submitArticle(){
       'Content-Type': 'application/json',
       'Accept':       'application/json'
     },
-    body: '{ \"Id\": \"\", \"Title\": \"' + document.getElementById("Title").value 
-    +'\", \"Description\": \"' + document.getElementById("Description").value
-    +'\", \"Content\": \"' + document.getElementById("Content").value +"\"}"
+    body: JSON.stringify({ Id: "", Title: document.getElementById("Title").value, Description: document.getElementById("Description").value, Content: document.getElementById("Content").value})
   })
   .then((res) => res.json())
   .then((data) => console.log(data))
